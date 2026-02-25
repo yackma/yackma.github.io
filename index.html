@@ -20,9 +20,20 @@
   max-width: 500px;
   margin: auto;
 }
+.center {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 50%;
+}
+.flex-container {
+      display: flex;
+      gap: 20px;
+    }
 </style>
 <br/>
-<div class="content"><b><tt><h1>Matthew's Homepage</h1></tt></b><br/></div>
+<br/>
+<div class="content"><b><tt><h1 style="color:seagreen;">Matthew's Homepage</h1></tt></b><br/></div>
     <hr/>
     <h2><b>About Me</b></h2>
     <p>
@@ -32,23 +43,33 @@
      I am most comfortable coding in is C++, but another langauge that I have picked up is Kotlin,
      for the Mobile App Dev class. The coding structure between Kotlin and HTML is pretty similar
      so I am interested in learning more about HTML.
+     </p>
      <hr/>
-    </p>
+
+
   <h2><b>Projects</b></h2>
-    <table>
-        <tr>
-            <th><h3>Budget App</h3></th>
-            <th><h3>VR Puzzle Escape</h3></th>
-        </tr>
-        <tr>
-            <th>image1</th>
-            <th>image2</th>
-        </tr>
-        <tr>
-            <th>desc1</th>
-            <th>desc2</th>
-        </tr>
-    </table>
+  <div class="flex-container">
+    <ul style="list-style-type:none;">
+    <li><h3><u>Budget App</u></h3></li>
+    <li> <img src= "Mount.jpg" alt="Mountain" width=“50”  height=“200” />
+    <li><blockquote>This project is the Budgeting App. I worked on this project in my Mobile App Dev 
+                     class in a team of 2. This was built in Android Studio with Kotlin. My teammate mainly 
+                     worked on the UI, while I worked on the functionality.
+    </blockquote></li>
+  </ul>
+
+  <ul style="list-style-type:none;">
+    <li><h3><u>VR Puzzle Escape</u></h3></li>
+    <li> </li>
+     <li><blockquote>This project is the VR Escape Puzzle. I worked on this project in my VR and AR class in 
+                     a team of 4. This was built in Unity with some C# scripting aspects. I worked on the starting room, 
+                     first puzzle room, and scripting for a flashlight. 
+     </blockquote></li>
+  </ul>
+  </div>
+  
+  <hr/>
+   
 </body>
 
 </html>
