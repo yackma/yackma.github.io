@@ -1,0 +1,96 @@
+<html>
+<head>
+    <title>Lab 6</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+    crossorigin="anonymous"></script>
+</head>
+
+<body>
+    <nav class="navbar navbar-light bg-light">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="index.html"><b style="color:mediumblue;">Matthew's Website</b></a>
+            <ul class="nav">
+                <li class="nav-item">
+                    <a class = "nav-link" href ="index.html">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class = "nav-link" href="lab3.html">Lab 3</a>
+                </li>
+                <li class="nav-item">
+                    <a class = "nav-link" href="lab4.html">Lab 4</a>
+                </li>
+                 <li class="nav-item">
+                    <a class = "nav-link" href="lab5.html">Lab 5</a>
+                </li>
+                <li class="nav-item">
+                    <a class = "nav-link active" href="lab6.html">Lab 6</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <br/>
+    <div style="max-width:200px; margin:auto;"><b><tt><h1 style="color:lightcoral;">Cat Facts</h1></tt></b></div>
+    <hr/>
+
+    <div style="text-align:center;"><img src="Cat.png" alt="cat" class="img-fluid rounded" width="400" id="catPic"></div>
+    <br/><br/>
+
+    <div style="text-align:center; max-width:300px; margin:auto;">
+        <button id="loadBtn" onclick="facts()">Learn Cat Facts Here!</button>
+         <button id="backBtn" onclick="goBack()" style="display:none;">Go Back</button>
+    </div>
+
+    <br/><br/>
+    <div id="tableArea" style="max-width:600px; margin:auto;"></div>
+
+
+<script>
+var catPic = "Cat.png";
+function facts(){
+    fetch('https://brianobruno.github.io/cats.json')
+    .then(r => r.json())
+    .then(data => {
+        data.facts.sort(function(a, b) {
+            return a.factId - b.factId;
+        });
+        document.images[0].src = data.catPhoto;
+
+        var tabDiv = document.getElementById("tableArea");
+        var table= "<table style='border-collapse:collapse; margin:auto; width:500px; text-align:center;' border='10'>"  +
+        "<tr><th style='border:1px solid black;'>Fact ID</th><th style='border:1px solid black;'>Facts</th></tr>";
+
+        for (var i = 0; i < data.facts.length;i++){
+            table +=
+                "<tr>"+"<td style='border:1px solid black;'>" + data.facts[i].factId +"</td>"      +"<td style='border:1px solid black;'>" + data.facts[i].text + "</td>" +"</tr>";
+        }
+        table += "</table>";
+        tabDiv.innerHTML =table;
+
+        var butn = document.body.getElementsByTagName("button");
+        butn[0].style.display ="none";
+        butn[1].style.display="inline-block";
+    });
+}
+
+function goBack() {
+    document.images[0].src = catPic;
+    var tabDiv = document.getElementById("tableArea");
+    tabDiv.innerHTML = "";
+
+    var butn=document.body.getElementsByTagName("button");
+    butn[0].style.display= "inline-block"; 
+    butn[1].style.display ="none";
+}
+</script>
+
+</body>
+</html>
