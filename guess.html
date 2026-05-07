@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>guess the character</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+    crossorigin="anonymous"></script>
+    <style>
+        body {
+            background-image: url('DisneyBackground.png');
+            background-size: cover;
+            background-attachment: fixed;
+            background-color: gainsboro;
+            color: white;
+        }
+    
+        
+        .page-title {
+            max-width: 400px;
+            margin: auto;
+            text-align: center;
+        }
+        .page-title a {
+            text-decoration: none;
+        }
+        .disney-nav {
+            background-color: dimgray;
+            text-align: center;
+            padding: 8px;
+            position: sticky;
+            top: 0;
+            z-index: 999;
+        }
+        .disney-nav a {
+            color: gainsboro;
+            margin: 0 15px;
+            text-decoration: none;
+        }
+        .disney-nav a.active {
+            color: coral;
+        }
+        .section-title {
+            max-width: 300px;
+            margin: auto;
+            text-align: center;
+        }
+        .game-wrapper {
+            max-width: 500px;
+            margin: auto;
+            text-align: center;
+        }
+        .game-card {
+            background-color: dimgray;
+            border-radius: 10px;
+            padding: 20px;
+            color: white;
+            text-align: left;
+        }
+        .game-card img {
+            width: 100%;
+            max-height: 400px;
+            object-fit: contain;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            background-color: #444;
+        }
+        #guessInput {
+            width: 70%;
+            padding: 8px;
+            border-radius: 5px;
+            border: none;
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar navbar-light bg-light">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="index.html"><b style="color:mediumblue;">Matthew's Website</b></a>
+            <ul class="nav">
+                <li class="nav-item">
+                    <a class = "nav-link" href ="index.html">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class = "nav-link" href="lab3.html">Lab 3</a>
+                </li>
+                <li class="nav-item">
+                    <a class = "nav-link" href="lab4.html">Lab 4</a>
+                </li>
+                 <li class="nav-item">
+                    <a class = "nav-link" href="lab5.html">Lab 5</a>
+                </li>
+                <li class="nav-item">
+                    <a class = "nav-link active" href="lab6.html">Lab 6</a>
+                </li>
+                 <li class="nav-item">
+                    <a class = "nav-link" href="final.html">Final</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <br/>
+
+    <div class="page-title">
+        <a href="final.html"><b><tt><h1 style="color:coral;">Disney API</h1></tt></b></a>
+    </div>
+
+    <hr/>
+
+    <div class="disney-nav">
+        <a href="final.html">Home</a>
+        <a href="allcharacters.html">All Characters</a>
+        <a href="search.html">Search Characters</a>
+        <a href="random.html">Random</a>
+        <a href="daily.html">Character of the Day</a>
+        <a href="guess.html" class="active">Guess the Character</a>
+    </div>
+
+    <br/>
+
+    <div style="padding:20px;">
+        <div class="section-title">
+            <b><tt><h2 style="color:coral;">Guess the Character!</h2></tt></b>
+        </div>
+        <hr/>
+
+        <div class="game-wrapper">
+            <p style="color:black;">A random Disney character will appear with their images and character information! You will have to guess the characters name. Can you figure out who it is?</p>
+
+            <div id="startArea">
+                <button onclick="startGame()">Play!</button>
+            </div>
+
+            <div id="gameArea" style="display:none;">
+                <div class="game-card">
+                    <img id="gameImage" src="" alt="Who is this?">
+                    <p><b style="color:coral;">Films:</b> <span id="gameFilms"></span></p>
+                    <p><b style="color:coral;">Short Films:</b> <span id="gameShortFilms"></span></p>
+                    <p><b style="color:coral;">TV Shows:</b> <span id="gameTV"></span></p>
+                    <p><b style="color:coral;">Video Games:</b> <span id="gameGames"></span></p>
+                    <p><b style="color:coral;">Park Attractions:</b> <span id="gameParks"></span></p>
+                    <p><b style="color:coral;">Allies:</b> <span id="gameAllies"></span></p>
+                    <p><b style="color:coral;">Enemies:</b> <span id="gameEnemies"></span></p>
+                </div>
+
+                <br/>
+
+                <div id="guessInputArea">
+                    <input id="guessInput" type="text" placeholder="Type the character's name">
+                    <button onclick="checkGuess()">Guess!</button>
+                </div>
+
+                <div id="resultArea" style="display:none; margin-top:15px;">
+                    <p id="resultMessage" style="font-weight:bold; font-size:1.1rem;"></p>
+                    <button onclick="startGame()">Next Character</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    var secretCharacter = null;
+
+    function startGame() {
+        document.getElementById("guessInput").value = "";
+        document.getElementById("resultMessage").innerText = "";
+        document.getElementById("resultArea").style.display = "none";
+        document.getElementById("guessInputArea").style.display = "block";
+        document.getElementById("gameArea").style.display = "none";
+        document.getElementById("startArea").style.display = "none";
+
+        var randomId = Math.floor(Math.random() * 9820) + 1;
+
+        fetch("https://api.disneyapi.dev/character/" + randomId)
+        .then(function(r) { return r.json(); })
+        .then(function(json) {
+            var c = json.data;
+
+            if (!c || !c.name || !c.imageUrl) {
+                startGame();
+                return;
+            }
+            secretCharacter = c;
+            fillClues(c);
+            document.getElementById("gameArea").style.display = "block";
+        })
+        .catch(function() {
+            startGame();
+        });
+    }
+
+    function fillClues(c) {
+        function fmt(arr) { return arr && arr.length ? arr.join(", ") : "None"; }
+        document.getElementById("gameImage").src = c.imageUrl;
+        document.getElementById("gameFilms").innerText= fmt(c.films);
+        document.getElementById("gameShortFilms").innerText= fmt(c.shortFilms);
+        document.getElementById("gameTV").innerText = fmt(c.tvShows);
+        document.getElementById("gameGames").innerText = fmt(c.videoGames);
+        document.getElementById("gameParks").innerText = fmt(c.parkAttractions);
+        document.getElementById("gameAllies").innerText = fmt(c.allies);
+        document.getElementById("gameEnemies").innerText =  fmt(c.enemies);
+    }
+
+    function checkGuess() {
+        var guess = document.getElementById("guessInput").value.trim().toLowerCase();
+        var answer = secretCharacter.name.toLowerCase();
+        var msg = document.getElementById("resultMessage");
+        if (guess === answer) {
+            msg.innerText = "Correct! It was " + secretCharacter.name + "!";
+            msg.style.color = "green";
+        } else {
+            msg.innerText = "Wrong! The answer was " + secretCharacter.name + ".";
+            msg.style.color = "red";
+        }
+        document.getElementById("guessInputArea").style.display = "none";
+        document.getElementById("resultArea").style.display = "block";
+    }
+    </script>
+
+</body>
+</html>

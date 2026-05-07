@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>final</title>
+    <title>random</title>
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -29,6 +29,7 @@
         .page-title a {
             text-decoration: none;
         }
+        
         .disney-nav {
             background-color: dimgray;
             text-align: center;
@@ -45,17 +46,26 @@
         .disney-nav a.active {
             color: coral;
         }
-        .welcome-box {
-            max-width: 750px;
+        .section-title {
+            max-width: 300px;
             margin: auto;
             text-align: center;
         }
-        .welcome-box p {
-            color: black;
+        #randomResult {
+            max-width: 400px;
+            margin: auto;
         }
-        .welcome-box img {
-            border-radius: 50%;
-            margin-top: 10px;
+        .char-display {
+            background-color: dimgray;
+            border-radius: 10px;
+            padding: 20px;
+            color: white;
+        }
+        .char-display img {
+            width: 100%;
+            max-height: 350px;
+            object-fit: cover;
+            border-radius: 8px;
         }
     </style>
 </head>
@@ -86,30 +96,72 @@
             </ul>
         </div>
     </nav>
+
     <br/>
 
     <div class="page-title">
         <a href="final.html"><b><tt><h1 style="color:coral;">Disney API</h1></tt></b></a>
     </div>
+
     <hr/>
 
-
     <div class="disney-nav">
-        <a href="final.html" class="active">Home</a>
+        <a href="final.html">Home</a>
         <a href="allcharacters.html">All Characters</a>
         <a href="search.html">Search Characters</a>
-        <a href="random.html">Random</a>
+        <a href="random.html" class="active">Random</a>
         <a href="daily.html">Character of the Day</a>
         <a href="guess.html">Guess the Character</a>
     </div>
 
     <br/>
-    <div class="welcome-box">
-        <b><tt><h2 style="color:coral;">Welcome!</h2></tt></b>
-        <p>Hello, welcome to my final project. I used the Disney API, which has 9820 Disney characters where you can search for them, get a random one, see a character of the day and play a guessing game!</p>
-        <p>I hope you enjoy!</p>
-        <img src="DisneyCharHome.jpg" alt="Disney Character" style="width:700px; height:400px; object-fit:cover; border-radius:10px; margin-top:15px; display:block; margin-left:auto; margin-right:auto;">
+
+    <div style="padding:20px;">
+        <div class="section-title">
+            <b><tt><h2 style="color:coral;">Random Character</h2></tt></b>
+        </div>
+        <hr/>
+        <div style="text-align:center;">
+            <button onclick="getRandomCharacter()">Get Random Character</button>
+        </div>
+        <br/>
+        <div id="randomResult"></div>
     </div>
+
+    <script>
+    function getRandomCharacter() {
+        document.getElementById("randomResult").innerHTML;
+        var randomId = Math.floor(Math.random() * 9820) + 1;
+
+        fetch("https://api.disneyapi.dev/character/" + randomId)
+        .then(function(r) { return r.json(); })
+        .then(function(json) {
+
+            var c = json.data;
+            if (!c || !c.name) {
+                getRandomCharacter();
+                return;
+            }
+            function fmt(arr) { return arr && arr.length ? arr.join(", ") : "None"; }
+            document.getElementById("randomResult").innerHTML =
+                "<div class='char-display'>" +
+                    "<img src='" + c.imageUrl + "' alt='" + c.name + "'>" +
+                    "<h3 style='color:coral; margin-top:15px;'>" + c.name + "</h3>" +
+                    "<p><b style='color:coral;'>Films:</b> " + fmt(c.films) + "</p>" +
+                    "<p><b style='color:coral;'>Short Films:</b> " + fmt(c.shortFilms) + "</p>" +
+                    "<p><b style='color:coral;'>TV Shows:</b> " + fmt(c.tvShows) + "</p>" +
+                    "<p><b style='color:coral;'>Video Games:</b> " + fmt(c.videoGames) + "</p>" +
+                    "<p><b style='color:coral;'>Park Attractions:</b> " + fmt(c.parkAttractions) + "</p>"+
+                    "<p><b style='color:coral;'>Allies:</b> " + fmt(c.allies) + "</p>" +
+
+                    "<p><b style='color:coral;'>Enemies:</b> " + fmt(c.enemies) + "</p>" +
+            "</div>";
+        })
+        .catch(function() {
+         getRandomCharacter();
+        });
+    }
+    </script>
 
 </body>
 </html>

@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>daily</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+    crossorigin="anonymous"></script>
+    <style>
+        body {
+            background-image: url('DisneyBackground.png');
+            background-size: cover;
+            background-attachment: fixed;
+            background-color: gainsboro;
+            color: white;
+        }
+        
+        .page-title {
+            max-width: 400px;
+            margin: auto;
+            text-align: center;
+        }
+        .page-title a {
+            text-decoration: none;
+        }
+        .disney-nav {
+            background-color: dimgray;
+            text-align: center;
+            padding: 8px;
+            position: sticky;
+            top: 0;
+            z-index: 999;
+        }
+        .disney-nav a {
+            color: gainsboro;
+            margin: 0 15px;
+            text-decoration: none;
+        }
+        .disney-nav a.active {
+            color: coral;
+        }
+        .section-title {
+            max-width: 300px;
+            margin: auto;
+            text-align: center;
+        }
+        #dailyResult {
+            max-width: 400px;
+            margin: auto;
+        }
+        .char-display {
+            background-color: dimgray;
+            border-radius: 10px;
+            padding: 20px;
+            color: white;
+        }
+        .char-display img {
+            width: 100%;
+            max-height: 350px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar navbar-light bg-light">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="index.html"><b style="color:mediumblue;">Matthew's Website</b></a>
+            <ul class="nav">
+                <li class="nav-item">
+                    <a class = "nav-link" href ="index.html">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class = "nav-link" href="lab3.html">Lab 3</a>
+                </li>
+                <li class="nav-item">
+                    <a class = "nav-link" href="lab4.html">Lab 4</a>
+                </li>
+                 <li class="nav-item">
+                    <a class = "nav-link" href="lab5.html">Lab 5</a>
+                </li>
+                <li class="nav-item">
+                    <a class = "nav-link active" href="lab6.html">Lab 6</a>
+                </li>
+                 <li class="nav-item">
+                    <a class = "nav-link" href="final.html">Final</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <br/>
+
+    <div class="page-title">
+        <a href="final.html"><b><tt><h1 style="color:coral;">Disney API</h1></tt></b></a>
+    </div>
+
+    <hr/>
+
+    <div class="disney-nav">
+        <a href="final.html">Home</a>
+        <a href="allcharacters.html">All Characters</a>
+        <a href="search.html">Search Characters</a>
+        <a href="random.html">Random</a>
+        <a href="daily.html" class="active">Character of the Day</a>
+        <a href="guess.html">Guess the Character</a>
+    </div>
+
+    <br/>
+
+    <div style="padding:20px;">
+        <div class="section-title">
+            <b><tt><h2 style="color:coral;">Character of the Day</h2></tt></b>
+        </div>
+        <hr/>
+        <p style="color:black; text-align:center;">Check back every day for a new Disney character!</p>
+        <div style="text-align:center;">
+            <button onclick="getCharacterOfTheDay()">Reveal Character of the Day</button>
+        </div>
+        <br/>
+        <div id="dailyResult"></div>
+    </div>
+
+    <script>
+    function getTodayKey() {
+        var now = new Date();
+        return now.getFullYear() + "-" + now.getMonth() + "-" + now.getDate();
+    }
+
+    function getCharacterOfTheDay() {
+        var today = getTodayKey();
+        var savedDate = localStorage.getItem("dailyDate");
+        var savedChar = localStorage.getItem("dailyCharacter");
+        if (savedDate === today && savedChar) {
+            showDailyCharacter(JSON.parse(savedChar));
+            return;
+        }
+
+        document.getElementById("dailyResult").innerHTML = "<p style='color:black; text-align:center;'>Loading...</p>";
+
+        var now = new Date();
+        var seed = now.getFullYear() * 10000 +(now.getMonth() + 1)*100 + now.getDate();
+        var dailyId = (seed % 9820) + 1;
+        fetch("https://api.disneyapi.dev/character/" + dailyId)
+        .then(function(r) { return r.json(); })
+        .then(function(json) {
+            var c = json.data;
+            if (!c ||!c.name) {
+                fetch("https://api.disneyapi.dev/character/" + (dailyId + 1))
+                .then(function(r2) { return r2.json(); })
+                .then(function(json2) {
+                    localStorage.setItem("dailyCharacter", JSON.stringify(json2.data));
+                    localStorage.setItem("dailyDate", today);
+                    showDailyCharacter(json2.data);
+                });
+                return;
+            }
+            localStorage.setItem("dailyCharacter", JSON.stringify(c));
+            localStorage.setItem("dailyDate", today);
+            showDailyCharacter(c);
+
+
+        });
+    }
+
+    function showDailyCharacter(c) {
+        function fmt(arr) { return arr && arr.length ? arr.join(", ") : "None"; }
+        document.getElementById("dailyResult").innerHTML =
+            "<div class='char-display'>" +
+                "<img src='" + c.imageUrl + "' alt='" + c.name + "'>" +
+                "<h3 style='color:coral; margin-top:15px;'>" + c.name + "</h3>" +
+                "<p><b style='color:coral;'>Films:</b> " + fmt(c.films) + "</p>" +
+                "<p><b style='color:coral;'>Short Films:</b> " + fmt(c.shortFilms) + "</p>" +
+                "<p><b style='color:coral;'>TV Shows:</b> " + fmt(c.tvShows) + "</p>" +
+                "<p><b style='color:coral;'>Video Games:</b> " + fmt(c.videoGames) + "</p>" +
+                "<p><b style='color:coral;'>Park Attractions:</b> " + fmt(c.parkAttractions) + "</p>" +
+                "<p><b style='color:coral;'>Allies:</b> " + fmt(c.allies) + "</p>" +
+                "<p><b style='color:coral;'>Enemies:</b> " + fmt(c.enemies) + "</p>" +
+            "</div>";
+    }
+    </script>
+
+
+</body>
+</html>
